@@ -1,17 +1,14 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-const User = sequelize.define('User', {
-    // Model attributes are defined here
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-}, {
-    tableName: 'users',
-    timestamps: true //active le champ creer le et modifier
+const userSchema = mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  lastName: { type: String, required: true},
+  firstName: { type: String, required: true},
+  role: { type: Boolean, default: 0}
 });
+
+userSchema.plugin(uniqueValidator);
+
+module.exports = mongoose.model('User', userSchema);
