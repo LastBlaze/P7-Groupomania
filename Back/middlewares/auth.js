@@ -7,17 +7,12 @@ module.exports = (req, res, next) => {
     } 
         const token = req.cookies.token;
     
-       const decodedToken = jwt.verify(token, process.env.APP_SECRET);
+        const decodedToken = jwt.verify(token, process.env.APP_SECRET);
 
-        req.user = decodedToken.userId;
-       //console.log("userId", userId);
-    //    req.auth = {
-    //        userId: userId,
-    //        //role: userRole
-    //    };
-
-    //    req.token = token;
-    //    req.user = userId;
+        req.auth = {
+            user: decodedToken.userId,
+            role: decodedToken.role
+        }
 
 	next();
 

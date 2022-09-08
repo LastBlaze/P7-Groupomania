@@ -10,7 +10,6 @@ exports.signup = async (req, res) => {
             password: hash,
             lastName: req.body.lastName,
             firstName: req.body.firstName,
-            role: req.body.role
   
         });
         user.save()
@@ -38,11 +37,21 @@ exports.login = (req, res, next) => {
                     }
 
                     const token = jwt.sign(
-                        { userId: user._id },
+                        { userId: user._id,
+                          role: user.role},
                         process.env.APP_SECRET,
                         { expiresIn: '24h' }
                     )
-                    res.status(200).cookie("token", token).json();
+
+                    
+                    res.status(200).cookie("token", token).json({
+                        userId: user._id,
+                        role: user.role,
+                        token: jwt.sign(
+                            { userId: user._id },
+                            process.env.APP_SECRET,
+                            { expiresIn: '24h' })
+                    });
                 })
                 
                 .catch(error => res.status(500).json({ error }));
