@@ -1,10 +1,17 @@
+const { secondary } = require("daisyui/src/colors");
 
 module.exports = {
   content: [
     "./src/**/*.{html,js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#FD2D01",
+        secondary: "#FFD7D7",
+        tertiary: "#4E5166",
+      }
+    },
     container: {
       center: true
     }

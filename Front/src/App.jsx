@@ -1,35 +1,46 @@
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
-import Navbar from "./components/Navbar";
+import { Routes, Route} from "react-router-dom";
+import React, { useState } from "react";
 
+// const App = () => {
+//   // const {active, setActive} = useState{"Login"};
 
-import { Routes, Route} from "react-router-dom"
-
-const App = () => {
-  return (
+//   return (
     
-    <div className="App container h-screen flex flex-col justify-between">
-      <Navbar/>
+//     <div className="App container flex flex-col justify-start  items-center bg-blue-200 h-screen">
+//       <Header/>
+//       <Routes>
+//         {/* <Route path="/" element={<Login />} />
+//         <Route path="/" element={<Signup />} /> */}
+//       </Routes>
+//         {/* <div>
+//         {active=== "Login" &&}
+//       </div> */}
+//     </div>
+  
+
+  export default function App() {
+    const {active, setActive} = useState("Login");
+    return(
+      
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/Signup" element={<Signup />} />
-        <Route path="/profil/:id" element={<Profile />} />
+          <Route path="/" element={<Login />} />
+          <Header/>
+      <div className="App">
+        <nav>
+        <button onClick={() => setActive("Login")}>Connexion</button>
+        <button onClick={() => setActive("Signup")}>Inscription</button>
+        </nav>
+        <div>
+        {active === "Connexion" && <Login title="Login" />}
+        {active === "Inscription" && <Signup title="Signup" />}
+      </div>
+      </div>
       </Routes>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <Login />
-      </main>
-      <footer>
-        <Footer />
-      </footer>
-    </div>
-    
-  );
+);
 };
 
-export default App;
+
+//export default App;
