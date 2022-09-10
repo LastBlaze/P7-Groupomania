@@ -3,7 +3,7 @@ import React from "react";
 const Signup = () => {
   return (
 
-<div className="signup grid flex-grow h-auto mx-5 w-full card bg-tertiary rounded-box place-items-center border-4 border-white">
+<div className="signup grid flex-grow h-auto mt-4  w-full card bg-tertiary rounded-box place-items-center border-4 border-white">
       <div className="hero">
   <div className="hero-content flex-col ">
     <div className="text-center lg:text-left">

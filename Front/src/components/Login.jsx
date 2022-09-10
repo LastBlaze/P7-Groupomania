@@ -2,7 +2,7 @@ import React from "react";
 
 const Login = () => {
   return (
-      <div className="login grid flex-grow h-auto w-full mx-5 card bg-tertiary rounded-box place-items-center border-4 border-white">
+      <div className="grid flex-grow h-auto w-full mt-4 card bg-tertiary rounded-box place-items-center border-4 border-white ">
         <div className="hero pt-16 pb-16">
           <div className="hero-content flex-col h-max">
             <div className="text-center lg:text-left">
