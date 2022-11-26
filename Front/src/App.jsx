@@ -1,38 +1,24 @@
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import Posts from "./pages/Posts";
 import { Routes, Route} from "react-router-dom";
 import React from "react";
 
+
 const App = () => {
-  // const {active, setActive} = useState{"Login"};
+// usestate 
 
   return (
     
-    <div className="App container flex flex-col justify-start  items-center bg-blue-400 h-screen">
+    <div className="App container flex flex-col justify-start  items-center bg-blue-400">
       <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/acceuil" element={<Posts />} />
       </Routes>
-        {/* <div>
-        {active=== "Login" &&}
-      </div> */}
+      <Footer/>
     </div>
-  
-
-  /*export default function App() {
-    const {active, setActive} = useState("Login");
-    return(
-      <div className="App">
-        <nav>
-        <button onClick={() => setActive("Login")}>Connexion</button>
-        <button onClick={() => setActive("Signup")}>Inscription</button>
-        </nav>
-        <div>
-        {active === "Connexion" && <Login title="Login" />}
-        {active === "Inscription" && <Signup title="Signup" />}
-      </div>
-      </div>*/
-      
 );
 };
 
