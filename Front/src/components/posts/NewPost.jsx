@@ -3,9 +3,8 @@ import instance from "../../config/Axios";
 import { useState } from "react";
 
 const NewPost = (props) => {
+  const [description, setDescription] = useState("");
 
-  const [description, setDescription] = useState ("");
-  
   function refreshPage() {
     window.location.reload(false);
   }
@@ -25,7 +24,7 @@ const NewPost = (props) => {
         console.log(res);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }
 
@@ -58,7 +57,6 @@ const NewPost = (props) => {
           id="description"
           onChange={(e) => {
             setDescription(e.target.value);
-           
           }}
         ></input>
         <label htmlFor="image"></label>
@@ -71,17 +69,13 @@ const NewPost = (props) => {
         />
         <label htmlFor="btnValider"></label>
         <input
-         name="btnValider"
+          name="btnValider"
           type="submit"
           className="btn rounded-none rounded-b-3xl bg-base-100"
           onSubmit={handleSubmit}
           onClick={refreshPage}
           value="valider"
-          disabled={
-            !description
-              ? true
-              : false
-          }
+          disabled={!description ? true : false}
         />
       </div>
     </form>

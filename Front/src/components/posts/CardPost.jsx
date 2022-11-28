@@ -3,7 +3,6 @@ import instance from "../../config/Axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-
 import LikeButton from "./LikeButton";
 
 function CardPost(props) {
@@ -109,7 +108,7 @@ function CardPost(props) {
           )}
 
           <div className="flex justify-center">
-            <LikeButton item={props} />
+            <LikeButton item={item} />
           </div>
           <div className="text-center mb-3">Posté le {date}</div>
         </div>
@@ -171,7 +170,7 @@ function CardPost(props) {
                 <img className="h-72" src={item.imageUrl} />
                 <label htmlFor="image"></label>
                 <input
-                //  defaultValue={item.imageUrl}
+                  //  defaultValue={item.imageUrl}
                   onChange={(e) => setTextUpadate(e.target.value)}
                   type="file"
                   name="image"

@@ -68,14 +68,14 @@ exports.modifyPublication = (req, res, next) => {
   const role = req.auth.role;
 
   Publication.findOne({ _id: req.params.id }).then((publication) => {
-
     if (userId == publication.user || role) {
       if (req.file) {
-        
         // Si l'image est modifiée, on supprime l'ancienne image dans /image
-        if(publication.imageUrl){
-        const filename = publication.imageUrl.split("/images/")[1];
-        fs.unlink(`images/${filename}`, (err) => {console.log(err);});
+        if (publication.imageUrl) {
+          const filename = publication.imageUrl.split("/images/")[1];
+          fs.unlink(`images/${filename}`, (err) => {
+            console.log(err);
+          });
         }
 
         const publicationObject = {
@@ -131,25 +131,24 @@ exports.deletePublication = (req, res) => {
   const role = req.auth.role;
 
   Publication.findOne({ _id: req.params.id })
-  // console.log("cc",userId)
-  // console.log(req.params.id)
     .then((publication) => {
       if (userId == publication.user || role) {
         if (publication.imageUrl) {
           const filename = publication.imageUrl.split("/images/")[1];
-          fs.unlink(`images/${filename}`, (err) => {console.log(err)})
-        } 
-          publication.deleteOne({ _id: req.params.id })
-            .then(() => {
-              res.status(200).json({ message: "Publication supprimé !" });
-            })
-            .catch((error) => res.status(401).json({ error }))
-        
+          fs.unlink(`images/${filename}`, (err) => {
+            console.log(err);
+          });
+        }
+        publication
+          .deleteOne({ _id: req.params.id })
+          .then(() => {
+            res.status(200).json({ message: "Publication supprimé !" });
+          })
+          .catch((error) => res.status(401).json({ error }));
       } else {
         res.status(401).json({
           message: "vous n'avez pas l'autorisation de supprimer ce post",
         });
-        
       }
     })
     .catch((error) => {
@@ -160,7 +159,7 @@ exports.deletePublication = (req, res) => {
 
 exports.getAllPublication = (req, res) => {
   Publication.find()
-    .sort({createdAt : -1})
+    .sort({ createdAt: -1 })
     .populate("user", "lastName firstName _id")
 
     .then((publication) => {
@@ -173,43 +172,73 @@ exports.getAllPublication = (req, res) => {
 
 exports.likePublication = (req, res) => {
   Publication.findOne({ _id: req.params.id })
+
     .then((publication) => {
-      const typeLikes = req.body.likes; //valeur numérique attendue ?
-      const user = req.body.userId;
-      switch (typeLikes) {
-        case 1:
-          if (!publication.usersLiked.find((us) => us == user)) {
-            publication.likes++;
-            publication.usersLiked.push(user);
-          }
-
-          break;
-        case -1:
-          if (!publication.usersDisliked.find((us) => us == user)) {
-            publication.dislikes++;
-            publication.usersDisliked.push(user);
-          }
-
-          break;
-        case 0:
-          let index = publication.usersLiked.findIndex((us) => us == user);
-          if (index != -1) {
-            publication.usersLiked.splice(index, 1);
-            publication.likes--;
-          } else {
-            index = publication.usersDisliked.findIndex((us) => us == user);
-
-            publication.usersDisliked.splice(index, 1);
-            publication.dislikes--;
-          }
-          break;
-        default:
-          break;
+      const typeLikes = publication.likes; //valeur numérique attendue ?
+      const user = publication.user;
+      let indexLike = publication.usersLiked.findIndex((us) => us == user);
+      let indexDislike = publication.usersDisliked.findIndex(
+        (us) => us == user
+      );
+      if (publication.usersLiked.find((us) => us == user)) {
+        publication.likes -= 1;
+        publication.usersLiked.splice(indexLike, 1);
+      } else {
+        publication.likes++;
+        publication.usersLiked.push(user);
       }
+
+      if (publication.usersDisliked.find((us) => us == user)) {
+        publication.dislikes -= 1;
+        publication.usersDisliked.splice(indexDislike, 1);
+      } else {
+        publication.dislikes++;
+        publication.usersDisliked.push(user);
+      }
+
+      // else
+
+      // if (publication.usersLiked.find((us) => us == user) && publication.likes >= 0) {
+      //     publication.likes -= 1;
+      //     publication.usersLiked.filter(function(f) { return f !== user });
+
+      // }else
+
+      // if (!publication.usersDisliked.find((us) => us == user)){
+      //     publication.dislikes += 1;
+      //     publication.likes -= 1;
+      //     publication.usersDisliked.push(user);
+      //     publication.usersLiked.filter(function(f) { return f !== user });
+      // }
+
+      // case publication.usersDisliked.find((us) => us == user):
+
+      //   // if (publication.usersDisliked.find((us) => us == user)) {
+      //     publication.dislikes += 1;
+      //     publication.likes -= 1;
+      //     publication.usersDisliked.push(user);
+      //     publication.usersLiked.filter(function(f) { return f !== user });
+
+      //   break;
+      // case 0:
+      //   let index = publication.usersLiked.findIndex((us) => us == user);
+      //   if (index != -1) {
+      //     publication.usersLiked.splice(index, 1);
+      //     publication.likes--;
+      //   } else {
+      //     index = publication.usersDisliked.findIndex((us) => us == user);
+
+      //     publication.usersDisliked.splice(index, 1);
+      //     publication.dislikes--;
+      //   }
+      //   break;
+      // default:
+      //   break;
+      // }
       publication
         .save()
         .then(() => {
-          res.status(200).json({ message: "ok" });
+          res.status(200).json({ message: "ok", publication });
         })
         .catch((error) => res.status(400).json({ error }));
     })
