@@ -5,8 +5,8 @@ import instance from "../../config/Axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-const [message, setMessage] = useState("");
-const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -67,15 +67,19 @@ const [error, setError] = useState(false);
                   Mot de passe :
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   value={password}
                   placeholder="mot de passe"
                   className="input input-bordered border-1 border-black mb-3"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <p className={
-                  error ? "hidden" : "text-red-700 text-lg font-bold"  
-                  }>{message}</p>
+                <p
+                  className={
+                    error ? "hidden" : "text-red-700 text-lg font-bold"
+                  }
+                >
+                  {message}
+                </p>
                 <label className="label">
                   <a
                     href="/login"

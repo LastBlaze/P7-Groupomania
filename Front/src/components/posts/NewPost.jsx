@@ -30,7 +30,7 @@ const NewPost = (props) => {
 
   return (
     <form encType="multipart/form-data" onSubmit={handleSubmit}>
-      <div className="flex flex-col justify-between rounded-3xl bg-white border-8  border-tertiary p-2 mt-10 container max-w-xl min-h-[250px]">
+      <div className="flex flex-col justify-between rounded-3xl bg-white border-8  border-tertiary p-2 mt-20 container max-w-xl min-h-[250px] lg:mt-10">
         <label htmlFor="description"></label>
         <input
           type="text"

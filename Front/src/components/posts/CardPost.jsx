@@ -170,7 +170,6 @@ function CardPost(props) {
                 <img className="h-72" src={item.imageUrl} />
                 <label htmlFor="image"></label>
                 <input
-                  //  defaultValue={item.imageUrl}
                   onChange={(e) => setTextUpadate(e.target.value)}
                   type="file"
                   name="image"
@@ -189,9 +188,7 @@ function CardPost(props) {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            {/* <LikeButton data={props} /> */}
-          </div>
+          <div className="flex justify-center"></div>
           <div className="text-center mb-3">Posté le {date}</div>
         </form>
       )}

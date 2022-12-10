@@ -172,75 +172,47 @@ exports.getAllPublication = (req, res) => {
 
 exports.likePublication = (req, res) => {
   Publication.findOne({ _id: req.params.id })
-
     .then((publication) => {
-      const typeLikes = publication.likes; //valeur numérique attendue ?
-      const user = publication.user;
+      const typeLikes = req.body.type;
+      const numberLike = req.body.number;
+      const user = req.auth.user;
       let indexLike = publication.usersLiked.findIndex((us) => us == user);
       let indexDislike = publication.usersDisliked.findIndex(
         (us) => us == user
       );
-      if (publication.usersLiked.find((us) => us == user)) {
-        publication.likes -= 1;
-        publication.usersLiked.splice(indexLike, 1);
-      } else {
-        publication.likes++;
+
+      if (numberLike == 0) {
+        if (typeLikes == "like") {
+          //retiré utilisateur de la liste like
+          publication.usersLiked.splice(indexLike, 1);
+          // like -1
+          // publication.likes -= 1;
+          publication.save();
+          res.status(200).json(publication.usersLiked);
+        } else {
+          //retiré l'utilisateur de la liste dislike
+          publication.usersDisliked.splice(indexDislike, 1);
+          // dislike -1
+          publication.dislikes -= 1;
+          publication.save();
+          res.status(200).json(publication.usersDisliked);
+        }
+      } else if (numberLike == 1) {
+        // ajout de l'utilisateur dans la liste like
         publication.usersLiked.push(user);
-      }
-
-      if (publication.usersDisliked.find((us) => us == user)) {
-        publication.dislikes -= 1;
-        publication.usersDisliked.splice(indexDislike, 1);
+        // like +1
+        publication.likes++;
+        // res.status(200).json({"message":"ok"})
+        publication.save();
+        res.status(200).json(publication.usersLiked);
       } else {
-        publication.dislikes++;
+        //ajout de l'utilisateurdans la liste dislike
         publication.usersDisliked.push(user);
+        // dislike +1
+        publication.dislikes++;
+        publication.save();
+        res.status(200).json(publication.usersDisliked);
       }
-
-      // else
-
-      // if (publication.usersLiked.find((us) => us == user) && publication.likes >= 0) {
-      //     publication.likes -= 1;
-      //     publication.usersLiked.filter(function(f) { return f !== user });
-
-      // }else
-
-      // if (!publication.usersDisliked.find((us) => us == user)){
-      //     publication.dislikes += 1;
-      //     publication.likes -= 1;
-      //     publication.usersDisliked.push(user);
-      //     publication.usersLiked.filter(function(f) { return f !== user });
-      // }
-
-      // case publication.usersDisliked.find((us) => us == user):
-
-      //   // if (publication.usersDisliked.find((us) => us == user)) {
-      //     publication.dislikes += 1;
-      //     publication.likes -= 1;
-      //     publication.usersDisliked.push(user);
-      //     publication.usersLiked.filter(function(f) { return f !== user });
-
-      //   break;
-      // case 0:
-      //   let index = publication.usersLiked.findIndex((us) => us == user);
-      //   if (index != -1) {
-      //     publication.usersLiked.splice(index, 1);
-      //     publication.likes--;
-      //   } else {
-      //     index = publication.usersDisliked.findIndex((us) => us == user);
-
-      //     publication.usersDisliked.splice(index, 1);
-      //     publication.dislikes--;
-      //   }
-      //   break;
-      // default:
-      //   break;
-      // }
-      publication
-        .save()
-        .then(() => {
-          res.status(200).json({ message: "ok", publication });
-        })
-        .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => {
       console.error(error);

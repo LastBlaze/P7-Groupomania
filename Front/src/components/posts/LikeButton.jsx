@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import instance from "../../config/Axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
@@ -6,83 +6,158 @@ import { faThumbsDown } from "@fortawesome/free-solid-svg-icons";
 
 function LikeButton(props) {
   const item = props.item;
-  const [likes, setLikes] = useState([]);
-  const [dislikes, setDislikes] = useState([]);
+
+  const [likes, setLikes] = useState(item.usersLiked);
+  const [dislikes, setDislikes] = useState(item.usersDisliked);
+
+  const [disableLike, setDisableLike] = useState(false);
+  const [disableDislike, setDisableDislike] = useState(false);
 
   const [changeColorLike, setChangeColorLike] = useState(false);
   const [changeColorDislike, setChangeColorDislike] = useState(false);
-  const [btnDisable, setBtnDisable] = useState(false);
 
-  const handleClickLike = () => {
-    setChangeColorLike(!changeColorLike);
-  };
+  const userData = JSON.parse(localStorage.userInfo);
 
-  const handleClickDislike = () => {
-    setChangeColorDislike(!changeColorDislike);
-  };
+  useEffect(() => {
+    if (likes.includes(userData.userId)) {
+      setChangeColorLike(!changeColorLike);
+      setDisableDislike(!disableDislike);
+    }
+  }, []);
 
-  // useEffect (() => {
-  //   instance.get
-  // }
+  useEffect(() => {
+    if (dislikes.includes(userData.userId)) {
+      setChangeColorDislike(!changeColorDislike);
+      setDisableLike(!disableLike);
+    }
+  }, []);
 
   function likePost(item) {
-    instance(`http://localhost:3001/api/v1/msg/${item._id}/like`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        setLikes(res.data.publication.usersLiked);
+    if (changeColorLike == true) {
+      instance(`http://localhost:3001/api/v1/msg/${item._id}/like`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          type: "like",
+          number: 0,
+        },
       })
-      .catch((err) => {
-        console.error(err);
-      });
+        .then((res) => {
+          setLikes(res.data);
+          setChangeColorLike(!changeColorLike);
+          setDisableDislike(!disableDislike);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      instance(`http://localhost:3001/api/v1/msg/${item._id}/like`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          type: "like",
+          number: 1,
+        },
+      })
+        .then((res) => {
+          setLikes(res.data);
+          setChangeColorLike(!changeColorLike);
+          setDisableDislike(!disableDislike);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }
 
   function dislikePost(item) {
-    instance(`http://localhost:3001/api/v1/msg/${item._id}/like`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        setDislikes(res.data.publication.usersDisliked);
+    if (changeColorDislike == true) {
+      instance(`http://localhost:3001/api/v1/msg/${item._id}/like`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          type: "dislike",
+          number: 0,
+        },
       })
-      .catch((err) => {
-        console.error(err);
-      });
+        .then((res) => {
+          setDislikes(res.data);
+          setChangeColorDislike(!changeColorDislike);
+          setDisableLike(!disableLike);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      instance(`http://localhost:3001/api/v1/msg/${item._id}/like`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          type: "dislike",
+          number: -1,
+        },
+      })
+        .then((res) => {
+          setDislikes(res.data);
+          setChangeColorDislike(!changeColorDislike);
+          setDisableLike(!disableLike);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }
 
   return (
     <div className="LikeButton flex text-center">
-      <button data-type="like" className="flex">
+      <button data-type="like" className="flex cursor-default">
         <FontAwesomeIcon
           onClick={() => {
-            likePost(item);
-            handleClickLike();
+            if (!disableLike) {
+              likePost(item);
+            }
           }}
-          className={`hover:text-green-500  pt-4 cursor-pointer ${
-            changeColorLike === true ? "text-green-500" : "text-white"
+          className={`pt-4 cursor-pointer ${
+            disableLike
+              ? "text-gray-500 cursor-default"
+              : [
+                  changeColorLike === true
+                    ? "text-green-500"
+                    : "text-white hover:text-green-500",
+                ]
           }`}
           icon={faThumbsUp}
         ></FontAwesomeIcon>
-        <div className="p-3 mr-5">{likes.length}</div>
+        <div className="p-3 mr-5 cursor-default">{likes.length}</div>
       </button>
 
-      <button data-type="dislike" className="flex">
+      <button data-type="dislike" className="flex cursor-default">
         <FontAwesomeIcon
           onClick={() => {
-            dislikePost(item);
-            handleClickDislike();
+            if (!disableDislike) {
+              dislikePost(item);
+            }
           }}
-          className={`hover:text-red-500 pt-4 cursor-pointer ${
-            changeColorDislike === true ? "text-red-500" : "text-white"
+          className={`pt-4 cursor-pointer ${
+            disableDislike
+              ? "text-gray-500 cursor-default"
+              : [
+                  changeColorDislike === true
+                    ? "text-red-500"
+                    : "text-white hover:text-red-500",
+                ]
           }`}
           icon={faThumbsDown}
         ></FontAwesomeIcon>
-        <div className="p-3">{dislikes.length}</div>
+        <div className="p-3 cursor-default">{dislikes.length}</div>
       </button>
     </div>
   );
