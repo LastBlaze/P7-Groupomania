@@ -80,14 +80,7 @@ const Login = () => {
                 >
                   {message}
                 </p>
-                <label className="label">
-                  <a
-                    href="/login"
-                    className="label-text-alt link link-hover underline underline-offset-2 text-base text-white"
-                  >
-                    Mot de passe oublié ?
-                  </a>
-                </label>
+                
               </div>
               <div className="form-control mt-6">
                 <button

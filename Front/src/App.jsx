@@ -2,8 +2,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Posts from "./pages/Posts";
-import { Routes, Route } from "react-router-dom";
-import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import PrivateRoute from "./config/PrivateRoute";
 
 const App = () => {
   return (
@@ -11,7 +11,10 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/acceuil" element={<Posts />} />
+        <Route path="/acceuil" element={<PrivateRoute />}>
+          <Route path="" element={<Posts />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
     </div>

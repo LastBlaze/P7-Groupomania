@@ -177,41 +177,51 @@ exports.likePublication = (req, res) => {
       const numberLike = req.body.number;
       const user = req.auth.user;
       let indexLike = publication.usersLiked.findIndex((us) => us == user);
-      let indexDislike = publication.usersDisliked.findIndex(
-        (us) => us == user
-      );
-
+      let indexDislike = publication.usersDisliked.findIndex((us) => us == user);
+   
       if (numberLike == 0) {
-        if (typeLikes == "like") {
-          //retiré utilisateur de la liste like
-          publication.usersLiked.splice(indexLike, 1);
-          // like -1
-          // publication.likes -= 1;
+        if (indexLike !== -1 || indexDislike !== -1) {
+          if (typeLikes == "like") {
+            //retiré utilisateur de la liste like
+            publication.usersLiked.splice(indexLike, 1);
+            // like -1
+            publication.likes -= 1;
+            publication.save();
+            res.status(200).json(publication.usersLiked);
+          } else {
+            //retiré l'utilisateur de la liste dislike
+            publication.usersDisliked.splice(indexDislike, 1);
+            // dislike -1
+            publication.dislikes -= 1;
+            publication.save();
+            res.status(200).json(publication.usersDisliked);
+          }
+        } else {
+          res.status(400).json({ message: "ça bloque !" });
+        }
+      } else if (numberLike == 1) {
+        if (indexLike == -1) {
+          // ajout de l'utilisateur dans la liste like
+          publication.usersLiked.push(user);
+          // like +1
+          publication.likes++;
+          // res.status(200).json({"message":"ok"})
           publication.save();
           res.status(200).json(publication.usersLiked);
         } else {
-          //retiré l'utilisateur de la liste dislike
-          publication.usersDisliked.splice(indexDislike, 1);
-          // dislike -1
-          publication.dislikes -= 1;
-          publication.save();
-          res.status(200).json(publication.usersDisliked);
+          res.status(400).json({ message: "ça bloque !" });
         }
-      } else if (numberLike == 1) {
-        // ajout de l'utilisateur dans la liste like
-        publication.usersLiked.push(user);
-        // like +1
-        publication.likes++;
-        // res.status(200).json({"message":"ok"})
-        publication.save();
-        res.status(200).json(publication.usersLiked);
       } else {
         //ajout de l'utilisateurdans la liste dislike
-        publication.usersDisliked.push(user);
-        // dislike +1
-        publication.dislikes++;
-        publication.save();
-        res.status(200).json(publication.usersDisliked);
+        if (indexDislike == -1) {
+          publication.usersDisliked.push(user);
+          // dislike +1
+          publication.dislikes++;
+          publication.save();
+          res.status(200).json(publication.usersDisliked);
+        } else {
+          res.status(400).json({ message: "ça bloque !" });
+        }
       }
     })
     .catch((error) => {

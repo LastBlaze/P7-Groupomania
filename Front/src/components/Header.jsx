@@ -9,8 +9,8 @@ const Header = (props) => {
     <div className="navbar  bg-tertiary border-b-4">
       <div className="container justify-center">
         <img className="h-full w-96 " src={Logo} alt="Logo" />
-        {pathname != "/" && (
-          <div className="absolute w-11/12 text-right">
+        {pathname !== "/" && (
+          <div className="absolute text-right container">
             <Logout />
           </div>
         )}
