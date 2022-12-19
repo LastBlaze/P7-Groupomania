@@ -103,7 +103,7 @@ function CardPost(props) {
           <p className="pl-10 mb-5">{item.description}</p>
           {item.imageUrl && (
             <figure>
-              <img className="h-72" src={item.imageUrl} alt="Shoes" />
+              <img className="h-72" src={item.imageUrl} alt="image non chargée" />
             </figure>
           )}
 

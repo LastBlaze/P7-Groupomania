@@ -5,9 +5,14 @@ import { useState } from "react";
 const NewPost = (props) => {
   const [description, setDescription] = useState("");
 
-  function refreshPage() {
-    window.location.reload(false);
-  }
+  // function refreshPage() {
+  //   window.location.reload(false);
+  // }
+
+function refreshPage() {
+  setTimeout(function(){ window.location.reload()}, 1000);
+}
+
 
   function handleSubmit(event) {
     event.preventDefault();

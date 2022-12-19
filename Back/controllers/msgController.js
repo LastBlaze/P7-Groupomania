@@ -9,7 +9,7 @@ exports.createPublication = (req, res) => {
   delete publicationObject._userId;
   if (req.file) {
     const publication = new Publication({
-      ...publicationObject,
+      ...publicationObject, 
       user: req.auth.user,
       imageUrl: `${req.protocol}://${req.get("host")}/images/${
         req.file.filename
@@ -27,6 +27,7 @@ exports.createPublication = (req, res) => {
       .catch((error) => {
         console.trace(error);
         res.status(400).json({ error });
+        console.log(error);
       });
   } else {
     const publication = new Publication({
