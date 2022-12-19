@@ -10,8 +10,12 @@ function CardPost(props) {
   const [isUpdated, setIsUpdated] = useState(false);
   const [textUpdate, setTextUpadate] = useState(null);
 
+  // function refreshPage() {
+  //   window.location.reload(false);
+  // }
+
   function refreshPage() {
-    window.location.reload(false);
+    setTimeout(function(){ window.location.reload()}, 1500);
   }
 
   const userInfo = JSON.parse(localStorage.userInfo);
